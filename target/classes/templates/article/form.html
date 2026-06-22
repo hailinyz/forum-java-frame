@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${article.id == null} ? '写文章 - 海林博客' : '编辑文章 - 海林博客'">写文章</title>
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background-color: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        /* 导航 */
+        .navbar {
+            background-color: #34495e !important;
+        }
+        /* 主按钮 */
+        .btn-main {
+            background-color: #34495e;
+            color: #fff;
+        }
+        .btn-main:hover {
+            background-color: #2c3e50;
+            color: #fff;
+        }
+        /* 卡片 */
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: none;
+        }
+        /* 编辑器高度 */
+        #content {
+            min-height: 350px;
+            font-family: Consolas, monospace;
+        }
+        footer {
+            background-color: #34495e;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 导航 -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/}">海林博客</a>
+        <div class="ms-auto d-flex gap-2">
+            <a class="btn btn-sm btn-outline-light" th:href="@{/user/profile}">
+                <i class="bi bi-person-circle me-1"></i><span sec:authentication="name"></span>
+            </a>
+            <form th:action="@{/logout}" method="post" class="d-inline">
+                <button class="btn btn-sm btn-danger" type="submit">退出</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<!-- 主体内容 -->
+<div class="container py-5 flex-grow-1" style="max-width: 900px;">
+    <div class="card">
+        <div class="card-header bg-white fw-bold h5">
+            <i class="bi bi-pencil-square me-2"></i>
+            <span th:text="${article.id == null} ? '写文章' : '编辑文章'"></span>
+        </div>
+        <div class="card-body p-4">
+            <form th:action="${article.id == null} ? @{/article/save} : @{/article/update}" method="post" id="articleForm">
+                <input type="hidden" name="id" th:if="${article.id != null}" th:value="${article.id}">
+
+                <!-- 标题 -->
+                <div class="mb-3">
+                    <label class="form-label fw-medium">文章标题</label>
+                    <input type="text" class="form-control form-control-lg" name="title"
+                           th:value="${article.title}" placeholder="请输入文章标题" required>
+                </div>
+
+                <!-- 分类 -->
+                <div class="mb-3">
+                    <label class="form-label fw-medium">文章分类</label>
+                    <select class="form-select" name="categoryId" required>
+                        <option value="">请选择分类</option>
+                        <option th:each="category : ${categories}"
+                                th:value="${category.id}"
+                                th:text="${category.name}"
+                                th:selected="${article.categoryId != null && article.categoryId == category.id}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- 摘要 -->
+                <div class="mb-3">
+                    <label class="form-label fw-medium">文章摘要</label>
+                    <textarea class="form-control" rows="2" name="summary"
+                              th:text="${article.summary}"
+                              placeholder="简要描述文章内容，显示在首页列表" required></textarea>
+                </div>
+
+                <!-- 内容 -->
+                <div class="mb-4">
+                    <label class="form-label fw-medium">文章内容（支持 Markdown）</label>
+                    <textarea class="form-control" id="content" name="content"
+                              th:text="${article.content}"
+                              placeholder="# 开始编写你的文章..."></textarea>
+                </div>
+
+                <!-- 按钮 -->
+                <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                    <a th:href="@{/}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-1"></i>取消
+                    </a>
+                    <button type="submit" class="btn btn-main px-4">
+                        <span th:text="${article.id == null} ? '发布文章' : '保存修改'"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer>
+    © 2026 海林博客
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // 简单内容验证
+    document.getElementById('articleForm').addEventListener('submit', function (e) {
+        const content = document.getElementById('content').value.trim();
+        if (!content) {
+            e.preventDefault();
+            alert('请填写文章内容');
+        }
+    });
+</script>
+</body>
+</html>
