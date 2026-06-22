@@ -32,7 +32,7 @@
                u.nickname as author_name
         FROM article a
         LEFT JOIN category c ON a.category_id = c.id
-        LEFT JOIN user u ON a.user_id = u.id
+        LEFT JOIN `user` u ON a.user_id = u.id
         WHERE a.id = #{id}
     </select>
     
@@ -42,7 +42,7 @@
                u.nickname as author_name
         FROM article a
         LEFT JOIN category c ON a.category_id = c.id
-        LEFT JOIN user u ON a.user_id = u.id
+        LEFT JOIN `user` u ON a.user_id = u.id
         ORDER BY a.create_time DESC
     </select>
     
@@ -59,7 +59,7 @@
         SELECT <include refid="Base_Column_List"/>,
                u.nickname as author_name
         FROM article a
-        LEFT JOIN user u ON a.user_id = u.id
+        LEFT JOIN `user` u ON a.user_id = u.id
         WHERE a.category_id = #{categoryId}
         ORDER BY a.create_time DESC
     </select>
@@ -70,7 +70,7 @@
                u.nickname as author_name
         FROM article a
         LEFT JOIN category c ON a.category_id = c.id
-        LEFT JOIN user u ON a.user_id = u.id
+        LEFT JOIN `user` u ON a.user_id = u.id
         WHERE a.status = #{status}
         ORDER BY a.create_time DESC
     </select>
@@ -81,7 +81,7 @@
                u.nickname as author_name
         FROM article a
         LEFT JOIN category c ON a.category_id = c.id
-        LEFT JOIN user u ON a.user_id = u.id
+        LEFT JOIN `user` u ON a.user_id = u.id
         WHERE a.status = 1
         <if test="categoryId != null">
             AND a.category_id = #{categoryId}

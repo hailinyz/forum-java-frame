@@ -21,7 +21,7 @@
     
     <select id="findById" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List"/>
-        FROM comment c
+        FROM `comment` c
         WHERE c.id = #{id}
     </select>
     
@@ -29,8 +29,8 @@
         SELECT <include refid="Base_Column_List"/>,
                u.nickname as user_name,
                u.avatar as user_avatar
-        FROM comment c
-        LEFT JOIN user u ON c.user_id = u.id
+        FROM `comment` c
+        LEFT JOIN `user` u ON c.user_id = u.id
         WHERE c.article_id = #{articleId}
         AND c.status = 1
         ORDER BY c.create_time DESC
@@ -38,34 +38,34 @@
     
     <select id="findByUserId" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List"/>
-        FROM comment c
+        FROM `comment` c
         WHERE c.user_id = #{userId}
         ORDER BY c.create_time DESC
     </select>
     
     <select id="countByArticleId" resultType="int">
         SELECT COUNT(*)
-        FROM comment
+        FROM `comment`
         WHERE article_id = #{articleId} AND status = 1
     </select>
     
     <insert id="insert" parameterType="com.blog.entity.Comment" 
             useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO comment (article_id, user_id, parent_id, content, status, create_time)
+        INSERT INTO `comment` (article_id, user_id, parent_id, content, status, create_time)
         VALUES (#{articleId}, #{userId}, #{parentId}, #{content}, 1, NOW())
     </insert>
     
     <update id="update" parameterType="com.blog.entity.Comment">
-        UPDATE comment
+        UPDATE `comment`
         SET content = #{content}
         WHERE id = #{id}
     </update>
     
     <delete id="deleteById">
-        DELETE FROM comment WHERE id = #{id}
+        DELETE FROM `comment` WHERE id = #{id}
     </delete>
     
     <delete id="deleteByArticleId">
-        DELETE FROM comment WHERE article_id = #{articleId}
+        DELETE FROM `comment` WHERE article_id = #{articleId}
     </delete>
 </mapper>

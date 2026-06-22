@@ -1,4 +1,4 @@
-# ========== Stage 1: Build ==========
+# ===== Stage 1: Build =====
 FROM maven:3.9-eclipse-temurin-17-alpine AS builder
 
 WORKDIR /app
@@ -11,7 +11,7 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 RUN mvn package -DskipTests -B
 
-# ========== Stage 2: Runtime ==========
+# ===== Stage 2: Runtime =====
 FROM eclipse-temurin:17-jre-alpine AS runtime
 
 WORKDIR /app
@@ -19,8 +19,10 @@ WORKDIR /app
 # Copy the packaged JAR from builder stage
 COPY --from=builder /app/target/blog-system-1.0.0.jar app.jar
 
-# Expose port (will be overridden by Zeabur PORT env var)
 EXPOSE 8080
+
+# Use H2 in-memory database for free deployment (no external DB needed)
+ENV DB_PROFILE=h2
 
 # JVM tuning for container environments
 ENV JAVA_OPTS="-Xms256m -Xmx512m -XX:+UseSerialGC -XX:TieredStopAtLevel=1"

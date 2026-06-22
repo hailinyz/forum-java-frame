@@ -1,7 +1,9 @@
 -- 创建数据库
+SET NAMES utf8mb4;
 CREATE DATABASE IF NOT EXISTS blog DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE blog;
+SET NAMES utf8mb4;
 
 -- 用户表
 CREATE TABLE IF NOT EXISTS `user` (
